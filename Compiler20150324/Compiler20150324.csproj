@@ -41,8 +41,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ast.cs" />
+    <Compile Include="Ast\IntNum.cs" />
+    <Compile Include="Ast\FloatNum.cs" />
+    <Compile Include="Ast\StringNode.cs" />
+    <Compile Include="Ast\BoolNode.cs" />
+    <Compile Include="Ast\ArrayNode.cs" />
+    <Compile Include="Ast\Identifier.cs" />
+    <Compile Include="Ast\Block.cs" />
+    <Compile Include="Ast\Record.cs" />
+    <Compile Include="Ast\LetStatement.cs" />
+    <Compile Include="Ast\IfStatement.cs" />
+    <Compile Include="Ast\LambdaExpression.cs" />
+    <Compile Include="Ast\ReturnStatement.cs" />
+    <Compile Include="Ast\WhileStatement.cs" />
+    <Compile Include="Ast\FunctionStatement.cs" />
+    <Compile Include="Ast\Argument.cs" />
+    <Compile Include="Ast\FunctionCall.cs" />
+    <Compile Include="Ast\TupleNode.cs" />
+    <Compile Include="Ast\Delimeter.cs" />
+    <Compile Include="Ast\Node.cs" />
     <Compile Include="CodeException.cs" />
+    <Compile Include="Interpreter.cs" />
     <Compile Include="LexicalAnalyzer.cs" />
     <Compile Include="Primitives.cs" />
     <Compile Include="Program.cs" />

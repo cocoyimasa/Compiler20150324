@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Compiler.Ast;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -285,6 +286,36 @@ namespace Compiler
 
         }
     }
+    public class OutputType:Value
+    {
+        public List<Value> values;
+        public OutputType()
+        {
+        }
+        public OutputType(List<Value> values)
+        {
+            this.values = values;
+        }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(var val in values)
+            {
+                sb.Append(val.ToString() + ":");
+                sb.Append(val.Type() + " ");
+            }
+            return sb.ToString();
+        }
+        public override string Type()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var val in values)
+            {
+                sb.Append(val.Type() + " ");
+            }
+            return sb.ToString();
+        }
+    }
     public class ArrayType:Value
     {
         public List<Value> values;
@@ -301,7 +332,7 @@ namespace Compiler
             sb.Append("[ ");
             foreach(var val in values)
             {
-                sb.Append(val.Type()+" ");
+                sb.Append(val.ToString() + " ");
             }
             sb.Append("]");
             return sb.ToString();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Compiler.Ast;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -176,20 +177,24 @@ namespace Compiler
             return new Block(Token.NewToken("block"),stList);
             
         }
-        public static Scope ParseParameter(string name, out List<Identifier> parameters, ref int nextToken, ref Token token)
+        public static Scope ParseParameter(Token funcName, out List<Identifier> parameters, ref int nextToken, ref Token token)
         {
             parameters = new List<Identifier>();
             Scope scope = new Scope();
+            bool hasName = false;
+            bool hasType = false;
             while (ReadToken(ref nextToken, TokenType.Identifier, ref token))
             {
                 Dictionary<string, object> dict = new Dictionary<string, object>();
                 Identifier id = new Identifier(token,token.Value);
                 parameters.Add(id);
+                hasName = true;
                 if(ReadToken(ref nextToken,":",ref token) && 
                     IsType(ref nextToken,ref token))
                 {
                     Identifier type=new Identifier(token,token.Value);
                     dict.Add("type", type);
+                    hasType = true;
                 }
                 else if(LookAhead(ref nextToken,","))
                 {
@@ -202,7 +207,18 @@ namespace Compiler
                 }
                 scope.PutProperties(id.value, dict);
             }
-            return scope;
+            if(hasName && hasType)
+            {
+                throw new CodeException(funcName, "函数参数类型声明不完整，或者全部声明类型，或者全部不声明");
+            }
+            if(hasType)
+            {
+                return scope;
+            }
+            else
+            {
+                return null;
+            }
 
         }
         public static Node ParseFunction(ref int nextToken, ref Token token)
@@ -218,12 +234,13 @@ namespace Compiler
                 firstToken=token;
                 if(ReadToken(ref nextToken, "(", ref token))
                 {
-                    scope = ParseParameter(funcName,out parameters, ref nextToken, ref token);
+                    scope = ParseParameter(firstToken, out parameters, ref nextToken, ref token);
                     if (!ReadToken(ref nextToken, ")", ref token))
                     {
                         throw new CodeException(token,"缺少)");
                     }
-                    if(ReadToken(ref nextToken,":",ref token)&&
+                    if(scope != null &&
+                        ReadToken(ref nextToken,":",ref token)&&
                         ReadToken(ref nextToken,TokenType.Identifier,ref token))
                     {
                         scope.Put("->", "type",new Identifier(token,token.Value));
@@ -277,7 +294,13 @@ namespace Compiler
                 if(!ReadToken(ref nextToken,",",ref token))
                 {
                     int index = 0;
-                    if (FindToken(ref nextToken, ref index, ","))
+                    int index1 = 0;
+                    if (FindToken(ref nextToken, ref index1, ","))
+                    {
+                        Node elem = ParseExpression(ref nextToken, ref token, index1);
+                        elements.Add(elem);
+                    }
+                    else if (FindToken(ref nextToken, ref index, ")"))
                     {
                         Node elem = ParseExpression(ref nextToken, ref token, index);
                         elements.Add(elem);
@@ -296,25 +319,34 @@ namespace Compiler
         }
         public static Node ParseLet(ref int nextToken, ref Token token)
         {
-            string varName="";
+            Node pattern = null;
             Node value = null;
-            if(ReadToken(ref nextToken,TokenType.Identifier,ref token))
+            int index1 = 0;
+            if (FindToken(ref nextToken, ref index1, "="))
             {
-                varName=token.Value;
+                pattern = ParseExpression(ref nextToken, ref token, index1);
+            }
+            if (pattern == null)
+            {
+                throw new CodeException(token, "缺少变量名字");
             }
             if(ReadToken(ref nextToken,"=",ref token))
             {
-                int index = 0;
-                if(FindToken(ref nextToken,ref index,";"))
+                int index2 = 0;
+                if(FindToken(ref nextToken,ref index2,";"))
                 {
-                    value = ParseExpression(ref nextToken, ref token,index);
+                    value = ParseExpression(ref nextToken, ref token,index2);
                 }
+            }
+            if (value == null)
+            {
+                throw new CodeException(token, "缺少变量值");
             }
             if (!ReadToken(ref nextToken, ";", ref token))
             {
                 throw new CodeException(token, "缺少;");
             }
-            return new LetStatement(Token.NewToken("let"),varName,value);
+            return new LetStatement(Token.NewToken("let"),pattern,value);
         }
         public static Node ParseIf(ref int nextToken, ref Token token)
         {
@@ -380,7 +412,7 @@ namespace Compiler
         {
             List<Identifier> parameters = null;
             Node body = null;
-            Scope scope = ParseParameter("lambda", out parameters, ref nextToken, ref token);
+            Scope scope = ParseParameter(token, out parameters, ref nextToken, ref token);
             if (!ReadToken(ref nextToken, ")", ref token))
             {
                 throw new CodeException(token, "缺少)");

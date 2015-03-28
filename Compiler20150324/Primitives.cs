@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Compiler.Ast;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,23 @@ namespace Compiler
         public AddPrim() : base("+", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if(args[0] is IntType && args[1] is IntType)
+            {
+                return new IntType(((IntType)args[0]).value + ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new FloatType(((IntType)args[0]).value + ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new FloatType(((FloatType)args[0]).value + ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new FloatType(((FloatType)args[0]).value + ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "Add：错误的参数类型");                
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
@@ -48,6 +65,10 @@ namespace Compiler
                 return Value.FLOAT;
             }
             else if(args[0] is IntType && args[1] is IntType)
+            {
+                return Value.INT;
+            }
+            else if (args[0] is AnyType || args[1] is AnyType)
             {
                 return Value.INT;
             }
@@ -65,7 +86,23 @@ namespace Compiler
         public SubPrim() : base("-", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new IntType(((IntType)args[0]).value - ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new FloatType(((IntType)args[0]).value - ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new FloatType(((FloatType)args[0]).value - ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new FloatType(((FloatType)args[0]).value - ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "Sub：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
@@ -78,6 +115,10 @@ namespace Compiler
                 return Value.FLOAT;
             }
             else if (args[0] is IntType && args[1] is IntType)
+            {
+                return Value.INT;
+            }
+            else if (args[0] is AnyType || args[1] is AnyType)
             {
                 return Value.INT;
             }
@@ -95,7 +136,23 @@ namespace Compiler
         public MulPrim() : base("*", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new IntType(((IntType)args[0]).value * ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new FloatType(((IntType)args[0]).value * ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new FloatType(((FloatType)args[0]).value * ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new FloatType(((FloatType)args[0]).value * ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "Mul：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
@@ -111,6 +168,10 @@ namespace Compiler
             {
                 return Value.INT;
             }
+            else if(args[0] is AnyType || args[1] is AnyType)
+            {
+                return Value.INT;
+            }
             else
                 throw new CodeException(location.token, "Mul：错误的参数类型");     
         }
@@ -121,11 +182,26 @@ namespace Compiler
     }
     public class DivPrim     :Primitives
     {
-
         public DivPrim() : base("/", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new IntType(((IntType)args[0]).value / ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new FloatType(((IntType)args[0]).value / ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new FloatType(((FloatType)args[0]).value / ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new FloatType(((FloatType)args[0]).value / ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "Div：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
@@ -138,6 +214,10 @@ namespace Compiler
                 return Value.FLOAT;
             }
             else if (args[0] is IntType && args[1] is IntType)
+            {
+                return Value.INT;
+            }
+            else if (args[0] is AnyType || args[1] is AnyType)
             {
                 return Value.INT;
             }
@@ -155,7 +235,12 @@ namespace Compiler
         public AndPrim() : base("and", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is BoolType && args[1] is BoolType)
+            {
+                return new BoolType(((BoolType)args[0]).value && ((BoolType)args[1]).value);
+            }
+            throw new CodeException(location.token, "And：错误的参数类型"); 
+
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
@@ -164,6 +249,10 @@ namespace Compiler
                 throw new CodeException(location.token, "And：错误的参数个数");
             }
             if (args[0] is BoolType && args[1] is BoolType)
+            {
+                return Value.BOOL;
+            }
+            else if (args[0] is AnyType || args[1] is AnyType)
             {
                 return Value.BOOL;
             }
@@ -181,7 +270,11 @@ namespace Compiler
         public OrPrim() : base("or", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is BoolType && args[1] is BoolType)
+            {
+                return new BoolType(((BoolType)args[0]).value || ((BoolType)args[1]).value);
+            }
+            throw new CodeException(location.token, "Or：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
@@ -190,6 +283,10 @@ namespace Compiler
                 throw new CodeException(location.token, "Or：错误的参数个数");
             }
             if (args[0] is BoolType && args[1] is BoolType)
+            {
+                return Value.BOOL;
+            }
+            else if (args[0] is AnyType || args[1] is AnyType)
             {
                 return Value.BOOL;
             }
@@ -207,7 +304,11 @@ namespace Compiler
         public NotPrim() : base("not", 1) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is BoolType)
+            {
+                return new BoolType(!((BoolType)args[0]).value);
+            }
+            throw new CodeException(location.token, "Not：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
@@ -216,6 +317,10 @@ namespace Compiler
                 throw new CodeException(location.token, "Not：错误的参数个数");
             }
             if (args[0] is BoolType)
+            {
+                return Value.BOOL;
+            }
+            else if (args[0] is AnyType)
             {
                 return Value.BOOL;
             }
@@ -233,18 +338,38 @@ namespace Compiler
         public LtPrim() : base("<", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new BoolType(((IntType)args[0]).value < ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new BoolType(((IntType)args[0]).value < ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new BoolType(((FloatType)args[0]).value < ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new BoolType(((FloatType)args[0]).value < ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "Lt：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
             if (args.Count < 2)
             {
-                throw new CodeException(location.token, "Not：错误的参数个数");
+                throw new CodeException(location.token, "Lt：错误的参数个数");
             }
-            if (!(args[0] is IntType || args[0] is FloatType) ||
+            if (args[0] is AnyType || args[1] is AnyType)
+            {
+                return Value.BOOL;
+            }
+            else if (!(args[0] is IntType || args[0] is FloatType) ||
                 !(args[1] is FloatType || args[1] is IntType))
             {
-                throw new CodeException(location.token, "Not：错误的参数类型");
+                throw new CodeException(location.token, "Lt：错误的参数类型");
             }
             return Value.BOOL;
         }
@@ -260,18 +385,38 @@ namespace Compiler
         public LePrim() : base("<=", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new BoolType(((IntType)args[0]).value <= ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new BoolType(((IntType)args[0]).value <= ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new BoolType(((FloatType)args[0]).value <= ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new BoolType(((FloatType)args[0]).value <= ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "LE：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
             if (args.Count < 2)
             {
-                throw new CodeException(location.token, "Not：错误的参数个数");
+                throw new CodeException(location.token, "LE：错误的参数个数");
             }
-            if (!(args[0] is IntType || args[0] is FloatType) ||
+            if (args[0] is AnyType || args[1] is AnyType)
+            {
+                return Value.BOOL;
+            }
+            else if (!(args[0] is IntType || args[0] is FloatType) ||
                 !(args[1] is FloatType || args[1] is IntType))
             {
-                throw new CodeException(location.token, "Not：错误的参数类型");
+                throw new CodeException(location.token, "LE：错误的参数类型");
             }
             return Value.BOOL;
         }
@@ -286,18 +431,38 @@ namespace Compiler
         public GtPrim() : base(">", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new BoolType(((IntType)args[0]).value > ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new BoolType(((IntType)args[0]).value > ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new BoolType(((FloatType)args[0]).value > ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new BoolType(((FloatType)args[0]).value > ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "Gt：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
             if (args.Count < 2)
             {
-                throw new CodeException(location.token, "Not：错误的参数个数");
+                throw new CodeException(location.token, "Gt：错误的参数个数");
             }
-            if (!(args[0] is IntType || args[0] is FloatType) ||
+            if (args[0] is AnyType || args[1] is AnyType)
+            {
+                return Value.BOOL;
+            }
+            else if (!(args[0] is IntType || args[0] is FloatType) ||
                 !(args[1] is FloatType || args[1] is IntType))
             {
-                throw new CodeException(location.token, "Not：错误的参数类型");
+                throw new CodeException(location.token, "Gt：错误的参数类型");
             }
             return Value.BOOL;
         }
@@ -313,18 +478,38 @@ namespace Compiler
         public GePrim() : base(">=", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new BoolType(((IntType)args[0]).value >= ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new BoolType(((IntType)args[0]).value >= ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new BoolType(((FloatType)args[0]).value >= ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new BoolType(((FloatType)args[0]).value >= ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "GE：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
             if (args.Count < 2)
             {
-                throw new CodeException(location.token, "Not：错误的参数个数");
+                throw new CodeException(location.token, "GE：错误的参数个数");
             }
-            if (!(args[0] is IntType || args[0] is FloatType) ||
+            if (args[0] is AnyType || args[1] is AnyType)
+            {
+                return Value.BOOL;
+            }
+            else if (!(args[0] is IntType || args[0] is FloatType) ||
                 !(args[1] is FloatType || args[1] is IntType))
             {
-                throw new CodeException(location.token, "Not：错误的参数类型");
+                throw new CodeException(location.token, "GE：错误的参数类型");
             }
             return Value.BOOL;
         }
@@ -340,18 +525,38 @@ namespace Compiler
         public NotEqPrim() : base("<>", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new BoolType(((IntType)args[0]).value != ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new BoolType(((IntType)args[0]).value != ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new BoolType(((FloatType)args[0]).value != ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new BoolType(((FloatType)args[0]).value != ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "NotEq：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
             if (args.Count < 2)
             {
-                throw new CodeException(location.token, "Not：错误的参数个数");
+                throw new CodeException(location.token, "NotEq：错误的参数个数");
             }
-            if (!(args[0] is IntType || args[0] is FloatType) ||
+            if (args[0] is AnyType || args[1] is AnyType)
+            {
+                return Value.BOOL;
+            }
+            else if (!(args[0] is IntType || args[0] is FloatType) ||
                 !(args[1] is FloatType || args[1] is IntType))
             {
-                throw new CodeException(location.token, "Not：错误的参数类型");
+                throw new CodeException(location.token, "NotEq：错误的参数类型");
             }
             return Value.BOOL;
         }
@@ -367,18 +572,38 @@ namespace Compiler
         public EqPrim() : base("=", 2) { }
         public override Value Apply(List<Value> args, Node location)
         {
-            throw new NotImplementedException();
+            if (args[0] is IntType && args[1] is IntType)
+            {
+                return new BoolType(((IntType)args[0]).value == ((IntType)args[1]).value);
+            }
+            else if (args[0] is IntType && args[1] is FloatType)
+            {
+                return new BoolType(((IntType)args[0]).value == ((FloatType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is IntType)
+            {
+                return new BoolType(((FloatType)args[0]).value == ((IntType)args[1]).value);
+            }
+            else if (args[0] is FloatType && args[1] is FloatType)
+            {
+                return new BoolType(((FloatType)args[0]).value == ((FloatType)args[1]).value);
+            }
+            throw new CodeException(location.token, "Eq：错误的参数类型");
         }
         public override Value Typecheck(List<Value> args, Node location)
         {
             if (args.Count < 2)
             {
-                throw new CodeException(location.token, "Not：错误的参数个数");
+                throw new CodeException(location.token, "Eq：错误的参数个数");
             }
-            if (!(args[0] is IntType || args[0] is FloatType) ||
+            if (args[0] is AnyType || args[1] is AnyType)
+            {
+                return Value.BOOL;
+            }
+            else if (!(args[0] is IntType || args[0] is FloatType) ||
                 !(args[1] is FloatType || args[1] is IntType))
             {
-                throw new CodeException(location.token, "Not：错误的参数类型");
+                throw new CodeException(location.token, "Eq：错误的参数类型");
             }
             return Value.BOOL;
         }
