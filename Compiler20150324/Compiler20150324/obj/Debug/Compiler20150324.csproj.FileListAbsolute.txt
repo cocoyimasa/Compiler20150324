@@ -1,6 +1,0 @@
-E:\Program Files\Project\Compiler20150324\Compiler20150324\bin\Debug\Compiler20150324.exe.config
-E:\Program Files\Project\Compiler20150324\Compiler20150324\bin\Debug\Compiler20150324.exe
-E:\Program Files\Project\Compiler20150324\Compiler20150324\bin\Debug\Compiler20150324.pdb
-E:\Program Files\Project\Compiler20150324\Compiler20150324\obj\Debug\Compiler20150324.csprojResolveAssemblyReference.cache
-E:\Program Files\Project\Compiler20150324\Compiler20150324\obj\Debug\Compiler20150324.exe
-E:\Program Files\Project\Compiler20150324\Compiler20150324\obj\Debug\Compiler20150324.pdb
