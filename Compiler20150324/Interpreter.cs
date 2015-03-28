@@ -14,9 +14,9 @@ namespace Compiler
         {
             this.program = program;
         }
-        public Value Interpret()
+        public Value Interpret(Scope s)
         {
-            Value val=program.Interpret(Scope.initScope());
+            Value val=program.Interpret(s);
             return val;
         }
     }

@@ -145,8 +145,11 @@ namespace Compiler
         }
         public override string Type()
         {
-            return "Function";//bug
-
+            if (properties == null)
+            {
+                return "Void";
+            }
+            return properties.ToString();
         }
     }
     public class IntType : Value

@@ -276,12 +276,17 @@ namespace Compiler
                     var val = item.ElementAt(j);
                     if(j==item.Count-1)
                     {
-                        sb.Append(val.Value.ToString());
-
+                        if(val.Value is Value)
+                        {
+                            sb.Append(((Value)val.Value).Type());
+                        }
                     }
                     else
                     {
-                        sb.Append(val.Value.ToString() + "->");
+                        if (val.Value is Value)
+                        {
+                            sb.Append(((Value)val.Value).Type()+"->");
+                        }
                     }
                 }
             }

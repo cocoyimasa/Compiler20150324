@@ -55,6 +55,11 @@ namespace Compiler
                     }
                 }
             }
+            else
+            {
+                fun.properties=new Scope(s);
+                fun.properties.putValue("->", actual);
+            }
         }
     }
 }

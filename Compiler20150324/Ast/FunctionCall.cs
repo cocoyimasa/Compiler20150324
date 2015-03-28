@@ -150,7 +150,18 @@ namespace Compiler.Ast
                         return actual;
                     }
                 }
-                return Value.VOID;
+                else
+                {
+                    if (TypeChecker.self.callStack.Contains(fun))
+                    {
+                        Debug.WriteLine("You must specify return type for recursive functions: " + func.ToString());
+                        return null;
+                    }
+                    TypeChecker.self.callStack.Add((FunctionType)fun);
+                    Value actual = funcType.fun.body.Typecheck(funScope);
+                    TypeChecker.self.callStack.Remove((FunctionType)fun);
+                    return actual;
+                }
             }
             else if (fun is Primitives)
             {

@@ -7,6 +7,63 @@ using System.Threading.Tasks;
 
 namespace Compiler
 {
+    static class Sapphire
+    {
+        public static void SapphireConsole(Scope env)
+        {
+            while (true)
+            {
+                try
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(">>>");
+                    StringBuilder sb = new StringBuilder();
+                    string input = Console.ReadLine();
+                    while (true)
+                    {
+                        sb.Append(input);
+                        ConsoleKeyInfo info = Console.ReadKey();
+                        if(info.KeyChar=='\r')
+                        {
+                            break;
+                        }
+                        input = info.KeyChar + Console.ReadLine();
+                    }
+                    input = sb.ToString();
+                    if (input == "!q")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("Command exit is excuting!...");
+                        break;
+                    }
+                    if (!string.IsNullOrWhiteSpace(input))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        LexicalAnalyzer.InitTokenRules();
+                        List<Token> tokens = LexicalAnalyzer.Tokenizer(input);
+                        SyntacticalAnalyzer.tokens = tokens;
+                        Node result = SyntacticalAnalyzer.ParseProgram();
+                        //if (result != null)
+                        //{
+                        //    Console.WriteLine("Compiling...Syntactical Analysis Completed!");
+                        //}
+                        TypeChecker tc = new TypeChecker();
+                        TypeChecker.self = tc;
+                        Value value = tc.TypeCheck(result);
+                        Console.WriteLine(value.Type());
+                        Interpreter interpret = new Interpreter(result);
+                        Value val = interpret.Interpret(env);
+                        Console.WriteLine(val.ToString());
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+    }
     class Program
     {
         static void Main(string[] args)
@@ -34,39 +91,24 @@ namespace Compiler
 //                          let z=(-10.2);
 //                          }
 //                          ";
-            //            string code = @"def a()
-            //                            {
-            //                                 let c = (lambda(e,f){let z=1;})(10,20);
-            //                            }";
-            string code = @"def a(d)
-                            {
-                                let c = (-100)+d*2+100*0.3;
-                                return c;
-                            }
-                            a(10)
-                            ";
-            LexicalAnalyzer.InitTokenRules();
-            List<Token> tokens = LexicalAnalyzer.Tokenizer(code);
-            //foreach (var item in tokens)
-            //{
-            //    //固定长度输出 string.PadLeft string.PadRight
-            //    Console.WriteLine(item.Type.ToString().PadRight(12, ' ') + ":   " + item.Value);
-            //}
-            SyntacticalAnalyzer.tokens = tokens;
-            Node result = SyntacticalAnalyzer.ParseProgram();
-            if (result != null)
+//            string code = @"def a()
+//                                        {
+//                                             let c = (lambda(e,f){let z=1;})(10,20);
+//                                        }";
+//            string code = @"def a(d)
+//                            {
+//                                let c = (-100)+d*2+100*0.3;
+//                                return c;
+//                            }
+//                            a(10)
+//                            ";
+            Console.Write("Sapphire 1.0---2015----->>>\npress 'i' to interpret your code,'c' to compile>>>\n>>>");
+            string mode = Console.ReadLine();
+            if(mode=="i")
             {
-                Console.WriteLine("Compiling...Syntactical Analysis Completed!");
-                //Console.WriteLine(((FunctionStatement)result.children[0]).decl.funcName);
-                //Console.WriteLine(((FunctionStatement)result.children[0]).body[0].value.Value);
+                Scope env = Scope.initScope();
+                Sapphire.SapphireConsole(env);
             }
-            TypeChecker tc = new TypeChecker();
-            TypeChecker.self = tc;
-            Value value=tc.TypeCheck(result);
-            Console.WriteLine(value.ToString());
-            Interpreter interpret = new Interpreter(result);
-            Value val = interpret.Interpret();
-            Console.WriteLine(val.ToString());
             Console.ReadKey();
         }
     }

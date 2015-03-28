@@ -163,6 +163,10 @@ namespace Compiler
                     elements.Add(ParseFuncCall(ref nextToken, ref token));
                     //函数调用一律不加分号
                 }
+                else if (ReadToken(ref nextToken, TokenType.LET, ref token))
+                {
+                    elements.Add(ParseLet(ref nextToken, ref token));
+                }
                 else
                 {
                     //以上两个条件不匹配代表读到最后
@@ -413,10 +417,7 @@ namespace Compiler
             List<Identifier> parameters = null;
             Node body = null;
             Scope scope = ParseParameter(token, out parameters, ref nextToken, ref token);
-            if (!ReadToken(ref nextToken, ")", ref token))
-            {
-                throw new CodeException(token, "缺少)");
-            }
+            
             if (ReadToken(ref nextToken, "-", ref token) &&
                 ReadToken(ref nextToken, ">", ref token) &&
                 ReadToken(ref nextToken, TokenType.Identifier, ref token))
@@ -700,8 +701,10 @@ namespace Compiler
                     }
                     else
                     {
-                        args.Add(opStack.Pop());
-                        args.Add(opStack.Pop());
+                        Node args2 = opStack.Pop();
+                        Node args1 = opStack.Pop();
+                        args.Add(args1);
+                        args.Add(args2);
                     }
                     FunctionCall call = new FunctionCall(
                         Token.NewToken("primitive"), 
