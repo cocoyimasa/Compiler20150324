@@ -10,5 +10,5 @@
 
 > +  3.28 Interpreter Completed.
 
-> +  3.29-4.2 Fix many bugs,but I stop updating this project in github because of copyright.It shouldn't be opensourse since before.
+> +  3.29-4.2 Fix many bugs,but I stop updating this project.
 
