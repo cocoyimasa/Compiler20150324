@@ -1,6 +1,6 @@
 # Compiler20150324
 
-### EasyPython Language Compiler
+### Leaf Language Compiler
 
 ![type](https://img.shields.io/badge/type-library-pink.svg)
 ![platform](https://img.shields.io/badge/platform-windows-brightgreen.svg)
@@ -16,5 +16,6 @@
 
 > +  3.28 Interpreter Completed.
 
-> +  3.29-4.2 Fix many bugs,but I stop updating this project.
+> +  3.29-4.2 Fix many bugs
 
+> +  2016.09 new version updated,and start a new private repo in bitbucket. Stop updating in github public repo.
