@@ -21,3 +21,8 @@
 > +  2016.01 Code generator added.
 
 > +  2016.09 New versions has updated,and start a new private repo in bitbucket. Stop updating in github public repo.
+
+
+
+
+@Copyright Apache License 2.0 作者保留一切解释权
